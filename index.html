@@ -9,7 +9,7 @@
 </head>
 <body class="bg-gray-950 text-white font-mono min-h-screen p-6">
   <div class="max-w-4xl mx-auto">
-    <h1 class="text-3xl font-bold mb-4 text-purple-400">🛡️ JavaScript Encryptor (Hard)</h1>
+    <h1 class="text-3xl font-bold mb-4 text-purple-400">JavaScript Encryptor Xatanical</h1>
 
     <div class="mb-4 flex gap-3 items-center">
       <input type="file" id="fileInput" accept=".js" class="bg-gray-800 text-sm p-2 rounded"/>
@@ -18,7 +18,7 @@
 
     <textarea id="input" rows="10" placeholder="// Masukkan atau load kode JS..." class="w-full p-3 rounded bg-gray-800 text-white mb-4 outline-none focus:ring-2 focus:ring-purple-500"></textarea>
 
-    <button onclick="encryptCode()" class="bg-purple-600 hover:bg-purple-700 px-6 py-2 rounded font-bold">🔐 Encrypt</button>
+    <button id="encryptBtn" class="bg-purple-600 hover:bg-purple-700 px-6 py-2 rounded font-bold">🔐 Encrypt</button>
 
     <h2 class="text-xl mt-6 mb-2 text-green-400">🔒 Encrypted Output:</h2>
     <textarea id="output" rows="10" readonly class="w-full p-3 rounded bg-gray-800 text-green-300 mb-4 font-mono"></textarea>
@@ -40,32 +40,35 @@
       reader.readAsText(file);
     }
 
-    function encryptCode() {
+    document.getElementById("encryptBtn").addEventListener("click", () => {
       const inputCode = document.getElementById('input').value;
       if (!inputCode.trim()) return alert("Masukkan kode terlebih dahulu!");
 
-      const obfuscatedCode = JavaScriptObfuscator.obfuscate(inputCode, {
-        compact: true,
-        controlFlowFlattening: true,
-        controlFlowFlatteningThreshold: 1,
-        numbersToExpressions: true,
-        simplify: true,
-        stringArrayShuffle: true,
-        stringArray: true,
-        stringArrayThreshold: 1,
-        selfDefending: true,
-        deadCodeInjection: true,
-        deadCodeInjectionThreshold: 0.8,
-        unicodeEscapeSequence: true,
-        target: 'node',
-        stringArrayEncoding: ['rc4', 'base64', 'zeroWidth'],
-        stringArrayIndexShift: true,
-        splitStrings: true,
-        splitStringsChunkLength: 8
-      }).getObfuscatedCode();
+      try {
+        const obfuscatedCode = JavaScriptObfuscator.obfuscate(inputCode, {
+          target: 'node',
+          compact: true,
+          controlFlowFlattening: true,
+          controlFlowFlatteningThreshold: 1,
+          numbersToExpressions: true,
+          simplify: true,
+          stringArray: true,
+          stringArrayShuffle: true,
+          stringArrayThreshold: 1,
+          stringArrayEncoding: ['zeroWidth'],
+          stringArrayIndexShift: true,
+          splitStrings: true,
+          splitStringsChunkLength: 8,
+          selfDefending: true,
+          unicodeEscapeSequence: true
+        }).getObfuscatedCode();
 
-      document.getElementById('output').value = obfuscatedCode;
-    }
+        document.getElementById('output').value = obfuscatedCode;
+      } catch (err) {
+        alert("❌ Terjadi error saat encrypt: " + err.message);
+        console.error(err);
+      }
+    });
 
     function copyOutput() {
       const output = document.getElementById("output");

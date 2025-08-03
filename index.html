@@ -1,35 +1,94 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <title>Pencarian Akun Sosial</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link href="https://cdn.tailwindcss.com" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Xatanical Finder</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet"/>
+  <style>
+    body {
+      background: repeating-linear-gradient(
+        45deg,
+        #1a0000,
+        #1a0000 10px,
+        #330000 10px,
+        #330000 20px
+      );
+      color: white;
+      font-family: monospace;
+      overflow-x: hidden;
+    }
+
+    .marquee {
+      white-space: nowrap;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .marquee span {
+      display: inline-block;
+      position: absolute;
+      white-space: nowrap;
+      will-change: transform;
+      animation: marquee 10s linear infinite;
+    }
+
+    @keyframes marquee {
+      0% {
+        transform: translateX(100%);
+      }
+      100% {
+        transform: translateX(-100%);
+      }
+    }
+
+    .black-scroll {
+      color: black;
+      animation-duration: 15s;
+    }
+  </style>
 </head>
-<body class="bg-gray-900 text-white min-h-screen flex items-center justify-center px-4 py-8">
-  <div class="w-full max-w-xl text-center">
-    <h1 class="text-3xl font-bold text-purple-400 mb-4">🔍 Cari Akun Sosial Media</h1>
-    <p class="mb-6 text-gray-300">Masukkan username tanpa <code>@</code> atau tanpa <code>+</code> untuk WhatsApp.</p>
+<body class="p-4">
 
-    <input id="username" type="text" placeholder="contoh: xatanicvxii atau 6281234567890" class="w-full p-3 rounded bg-gray-800 text-white outline-none focus:ring-2 focus:ring-purple-500">
+  <!-- Marquee Header -->
+  <div class="marquee text-3xl font-bold mb-6">
+    <span class="text-red-600">🔥 Xatanical 🔥 Xatanical 🔥 Xatanical 🔥 Xatanical 🔥</span>
+  </div>
 
-    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-4">
-      <button onclick="search('telegram')" class="bg-blue-500 hover:bg-blue-600 py-2 rounded">Telegram</button>
-      <button onclick="search('instagram')" class="bg-pink-500 hover:bg-pink-600 py-2 rounded">Instagram</button>
-      <button onclick="search('facebook')" class="bg-blue-700 hover:bg-blue-800 py-2 rounded">Facebook</button>
-      <button onclick="search('whatsapp')" class="bg-green-600 hover:bg-green-700 py-2 rounded">WhatsApp</button>
+  <div class="marquee text-xl black-scroll mb-4">
+    <span>Menemukan akun sosial media secara cepat dan brutal...</span>
+  </div>
+
+  <!-- Main Box -->
+  <div class="bg-red-950 bg-opacity-70 border border-red-500 rounded-xl p-6 max-w-lg mx-auto shadow-2xl">
+    <h1 class="text-2xl font-bold text-red-400 text-center mb-4">🎯 Xatanical Sosmed Tracker</h1>
+    <input
+      id="username"
+      type="text"
+      placeholder="Masukkan username tanpa @"
+      class="w-full px-4 py-2 mb-4 bg-black text-white border border-red-500 rounded"
+    />
+
+    <div class="grid grid-cols-2 gap-3 mb-4">
+      <button onclick="search('telegram')" class="bg-red-600 hover:bg-red-700 py-2 px-4 rounded font-bold">Telegram</button>
+      <button onclick="search('instagram')" class="bg-red-600 hover:bg-red-700 py-2 px-4 rounded font-bold">Instagram</button>
+      <button onclick="search('facebook')" class="bg-red-600 hover:bg-red-700 py-2 px-4 rounded font-bold">Facebook</button>
+      <button onclick="search('whatsapp')" class="bg-red-600 hover:bg-red-700 py-2 px-4 rounded font-bold">WhatsApp</button>
     </div>
 
-    <div id="result" class="mt-8 hidden bg-gray-800 rounded p-4">
-      <h2 class="text-lg font-semibold text-green-400 mb-2">🔗 Hasil Pencarian:</h2>
-      <p id="linkOutput" class="text-blue-300 break-all underline cursor-pointer"></p>
+    <div id="result" class="hidden mt-6 text-center">
+      <p class="text-green-300 font-semibold">🔗 Ditemukan:</p>
+      <a id="result-link" href="#" target="_blank" class="text-blue-400 underline break-words"></a>
     </div>
   </div>
 
   <script>
     function search(platform) {
       const username = document.getElementById("username").value.trim();
-      if (!username) return alert("⚠️ Masukkan username atau nomor dulu!");
+      if (!username) {
+        alert("Masukkan username dulu.");
+        return;
+      }
 
       let url = "";
 
@@ -44,16 +103,15 @@
           url = `https://facebook.com/${username}`;
           break;
         case "whatsapp":
-          if (!/^\d+$/.test(username)) {
-            alert("⚠️ WhatsApp hanya menerima nomor HP (angka) tanpa +");
-            return;
-          }
-          url = `https://wa.me/${username}`;
+          url = `https://wa.me/${username.replace(/^\+/, "")}`;
           break;
+        default:
+          url = "#";
       }
 
-      document.getElementById("linkOutput").innerHTML = `<a href="${url}" target="_blank">${url}</a>`;
       document.getElementById("result").classList.remove("hidden");
+      document.getElementById("result-link").href = url;
+      document.getElementById("result-link").textContent = url;
     }
   </script>
 </body>

@@ -12,14 +12,14 @@
   <!-- Welcome Screen -->
   <div id="welcome" class="text-center">
     <h1 class="text-4xl font-bold text-purple-400 mb-6">Welcome to Obfuscated Xatanical</h1>
-    <button onclick="showLogin()" class="bg-purple-600 hover:bg-purple-700 px-6 py-3 rounded font-bold text-lg">Click Obfuscated</button>
+    <button id="btnStart" class="bg-purple-600 hover:bg-purple-700 px-6 py-3 rounded font-bold text-lg">Click Obfuscated</button>
   </div>
 
   <!-- Login Screen -->
   <div id="login" class="hidden text-center">
     <h2 class="text-xl mb-4">Masukkan Username Telegram</h2>
     <input id="username" type="text" placeholder="@username" class="px-4 py-2 rounded text-black"/>
-    <button onclick="enterApp()" class="bg-green-600 hover:bg-green-700 px-4 py-2 rounded ml-2">Kirim</button>
+    <button id="btnLogin" class="bg-green-600 hover:bg-green-700 px-4 py-2 rounded ml-2">Kirim</button>
   </div>
 
   <!-- Main App -->
@@ -28,7 +28,7 @@
 
     <div class="mb-4 flex gap-3 items-center">
       <input type="file" id="fileInput" accept=".js" class="bg-gray-800 text-sm p-2 rounded"/>
-      <button onclick="loadFile()" class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded text-sm">📂 Load File</button>
+      <button id="btnLoad" class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded text-sm">📂 Load File</button>
     </div>
 
     <textarea id="input" rows="10" placeholder="// Masukkan atau load kode JS..." class="w-full p-3 rounded bg-gray-800 text-white mb-4 outline-none focus:ring-2 focus:ring-purple-500"></textarea>
@@ -38,81 +38,92 @@
     <h2 class="text-xl mt-6 mb-2 text-green-400">🔒 Encrypted Output:</h2>
     <textarea id="output" rows="10" readonly class="w-full p-3 rounded bg-gray-800 text-green-300 mb-4 font-mono"></textarea>
 
-    <button onclick="copyOutput()" class="bg-gray-700 hover:bg-gray-600 px-4 py-2 rounded text-sm">📋 Copy</button>
-    <button onclick="downloadOutput()" class="bg-green-700 hover:bg-green-800 px-4 py-2 rounded text-sm ml-2">⬇️ Download .js</button>
+    <button id="btnCopy" class="bg-gray-700 hover:bg-gray-600 px-4 py-2 rounded text-sm">📋 Copy</button>
+    <button id="btnDownload" class="bg-green-700 hover:bg-green-800 px-4 py-2 rounded text-sm ml-2">⬇️ Download .js</button>
   </div>
 
+  <!-- All Script at the END -->
   <script>
-    function showLogin() {
-      document.getElementById("welcome").classList.add("hidden");
-      document.getElementById("login").classList.remove("hidden");
-    }
+    // Wait until DOM is fully loaded
+    window.addEventListener('DOMContentLoaded', () => {
+      const btnStart = document.getElementById("btnStart");
+      const btnLogin = document.getElementById("btnLogin");
+      const btnLoad = document.getElementById("btnLoad");
+      const encryptBtn = document.getElementById("encryptBtn");
+      const btnCopy = document.getElementById("btnCopy");
+      const btnDownload = document.getElementById("btnDownload");
 
-    function enterApp() {
-      const username = document.getElementById("username").value.trim();
-      if (!username.startsWith("@")) return alert("Masukkan username yang valid diawali @");
+      btnStart.addEventListener("click", () => {
+        document.getElementById("welcome").classList.add("hidden");
+        document.getElementById("login").classList.remove("hidden");
+      });
 
-      document.getElementById("login").classList.add("hidden");
-      document.getElementById("app").classList.remove("hidden");
-    }
+      btnLogin.addEventListener("click", () => {
+        const username = document.getElementById("username").value.trim();
+        if (!username.startsWith("@")) return alert("Masukkan username yang valid diawali @");
 
-    function loadFile() {
-      const fileInput = document.getElementById("fileInput");
-      const file = fileInput.files[0];
-      if (!file || !file.name.endsWith(".js")) return alert("Pilih file .js");
+        document.getElementById("login").classList.add("hidden");
+        document.getElementById("app").classList.remove("hidden");
+      });
 
-      const reader = new FileReader();
-      reader.onload = function (e) {
-        document.getElementById("input").value = e.target.result;
-      };
-      reader.readAsText(file);
-    }
+      btnLoad.addEventListener("click", () => {
+        const fileInput = document.getElementById("fileInput");
+        const file = fileInput.files[0];
+        if (!file || !file.name.endsWith(".js")) return alert("Pilih file .js");
 
-    document.getElementById("encryptBtn").addEventListener("click", () => {
-      const inputCode = document.getElementById('input').value;
-      if (!inputCode.trim()) return alert("Masukkan kode terlebih dahulu!");
+        const reader = new FileReader();
+        reader.onload = function (e) {
+          document.getElementById("input").value = e.target.result;
+        };
+        reader.readAsText(file);
+      });
 
-      try {
-        const obfuscatedCode = JavaScriptObfuscator.obfuscate(inputCode, {
-          target: 'node',
-          compact: true,
-          controlFlowFlattening: true,
-          controlFlowFlatteningThreshold: 1,
-          numbersToExpressions: true,
-          simplify: true,
-          stringArray: true,
-          stringArrayShuffle: true,
-          stringArrayThreshold: 1,
-          stringArrayEncoding: ['base64'],
-          stringArrayIndexShift: true,
-          splitStrings: true,
-          splitStringsChunkLength: 8,
-          selfDefending: true,
-          unicodeEscapeSequence: true
-        }).getObfuscatedCode();
+      encryptBtn.addEventListener("click", () => {
+        const inputCode = document.getElementById('input').value;
+        if (!inputCode.trim()) return alert("Masukkan kode terlebih dahulu!");
 
-        document.getElementById('output').value = obfuscatedCode;
-      } catch (err) {
-        alert(\"❌ Terjadi error saat encrypt: \" + err.message);
-        console.error(err);
-      }
+        try {
+          const obfuscatedCode = JavaScriptObfuscator.obfuscate(inputCode, {
+            target: 'node',
+            compact: true,
+            controlFlowFlattening: true,
+            controlFlowFlatteningThreshold: 1,
+            numbersToExpressions: true,
+            simplify: true,
+            stringArray: true,
+            stringArrayShuffle: true,
+            stringArrayThreshold: 1,
+            stringArrayEncoding: ['base64'],
+            stringArrayIndexShift: true,
+            splitStrings: true,
+            splitStringsChunkLength: 8,
+            selfDefending: true,
+            unicodeEscapeSequence: true
+          }).getObfuscatedCode();
+
+          document.getElementById('output').value = obfuscatedCode;
+        } catch (err) {
+          alert("❌ Terjadi error saat encrypt: " + err.message);
+          console.error(err);
+        }
+      });
+
+      btnCopy.addEventListener("click", () => {
+        const output = document.getElementById("output");
+        output.select();
+        document.execCommand("copy");
+        alert("✅ Output berhasil dicopy!");
+      });
+
+      btnDownload.addEventListener("click", () => {
+        const blob = new Blob([document.getElementById("output").value], { type: "application/javascript" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "encrypted.js";
+        a.click();
+      });
     });
-
-    function copyOutput() {
-      const output = document.getElementById("output");
-      output.select();
-      document.execCommand("copy");
-      alert("✅ Output berhasil dicopy!");
-    }
-
-    function downloadOutput() {
-      const blob = new Blob([document.getElementById("output").value], { type: "application/javascript" });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = "encrypted.js";
-      a.click();
-    }
   </script>
 
 </body>

@@ -1,133 +1,52 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
   <meta charset="UTF-8">
-  <title>Obfuscated Xatanical</title>
+  <title>Pencarian Akun Sosial</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <script src="https://cdn.jsdelivr.net/npm/javascript-obfuscator@2.18.3/dist/javascript-obfuscator.browser.js"></script>
   <style>
-    body {
-      background: #0e0e0e;
-      color: #ccc;
-      font-family: monospace;
-      text-align: center;
-      padding: 20px;
-    }
-
-    h1 {
-      color: #a067d1;
-    }
-
-    textarea {
-      width: 90%;
-      height: 200px;
-      background: #111;
-      color: #0f0;
-      border: 1px solid #444;
-      padding: 10px;
-      font-family: monospace;
-      font-size: 14px;
-      margin-top: 10px;
-    }
-
-    input[type="file"] {
-      display: none;
-    }
-
-    label[for="fileInput"] {
-      background: #333;
-      color: #fff;
-      padding: 8px 16px;
-      border-radius: 4px;
-      cursor: pointer;
-      margin-top: 10px;
-      display: inline-block;
-    }
-
-    button {
-      margin-top: 15px;
-      background: #a067d1;
-      color: white;
-      border: none;
-      padding: 10px 20px;
-      border-radius: 5px;
-      cursor: pointer;
-      font-weight: bold;
-    }
-
-    #output {
-      height: 200px;
-      margin-top: 10px;
-    }
-
-    .tagline {
-      font-size: 18px;
-      margin-bottom: 20px;
-      color: #aaa;
-    }
+    body { font-family: sans-serif; background: #111; color: #fff; padding: 2rem; text-align: center; }
+    input, button { padding: 0.5rem; margin: 0.5rem; font-size: 1rem; border-radius: 6px; }
+    button { cursor: pointer; background: #444; color: #fff; border: none; }
+    button:hover { background: #666; }
   </style>
 </head>
 <body>
-  <h1>JavaScript Encryptor (Hard)</h1>
-  <div class="tagline">Welcome to Obfuscated Xatanical</div>
-
-  <label for="fileInput">📁 Load File</label>
-  <input type="file" id="fileInput" accept=".js">
-
-  <br><br>
-  <textarea id="input" placeholder="Masukkan kode JS atau upload file .js..."></textarea>
-  <br>
-  <button id="encryptBtn">Encrypt</button>
-  <br><br>
-  <div>🧪 Encrypted Output:</div>
-  <textarea id="output" readonly></textarea>
+  <h1>Cari Akun Sosial</h1>
+  <p>Masukkan username tanpa @</p>
+  <input id="username" placeholder="Contoh: xatanicvxii">
+  <div style="margin-top: 1rem;">
+    <button onclick="search('telegram')">🔍 Telegram</button>
+    <button onclick="search('instagram')">📸 Instagram</button>
+    <button onclick="search('facebook')">📘 Facebook</button>
+    <button onclick="search('whatsapp')">📱 WhatsApp</button>
+  </div>
 
   <script>
-    document.getElementById('fileInput').addEventListener('change', function (e) {
-      const file = e.target.files[0];
-      if (!file) return;
+    function search(platform) {
+      const username = document.getElementById("username").value.trim();
+      if (!username) return alert("Masukkan username dulu!");
 
-      const reader = new FileReader();
-      reader.onload = function (event) {
-        document.getElementById('input').value = event.target.result;
-      };
-      reader.readAsText(file);
-    });
+      let url = "";
 
-    document.getElementById('encryptBtn').addEventListener("click", () => {
-      const inputCode = document.getElementById('input').value;
-      if (!inputCode.trim()) return alert("Masukkan kode terlebih dahulu!");
-
-      const obfuscator = window['JavaScriptObfuscator'] || window['javascript-obfuscator'];
-      if (!obfuscator || !obfuscator.obfuscate) {
-        return alert("❌ Obfuscator gagal dimuat. Coba refresh halaman atau periksa jaringan.");
+      switch (platform) {
+        case "telegram":
+          url = "https://t.me/" + username;
+          break;
+        case "instagram":
+          url = "https://instagram.com/" + username;
+          break;
+        case "facebook":
+          url = "https://facebook.com/" + username;
+          break;
+        case "whatsapp":
+          if (!/^\d+$/.test(username)) return alert("Untuk WhatsApp, masukkan nomor HP tanpa +");
+          url = "https://wa.me/" + username;
+          break;
       }
 
-      try {
-        const obfuscatedCode = obfuscator.obfuscate(inputCode, {
-          target: 'node',
-          compact: true,
-          controlFlowFlattening: true,
-          controlFlowFlatteningThreshold: 1,
-          numbersToExpressions: true,
-          simplify: true,
-          stringArray: true,
-          stringArrayShuffle: true,
-          stringArrayThreshold: 1,
-          stringArrayEncoding: ['base64'],
-          stringArrayIndexShift: true,
-          splitStrings: true,
-          splitStringsChunkLength: 8,
-          selfDefending: true,
-          unicodeEscapeSequence: true
-        }).getObfuscatedCode();
-
-        document.getElementById('output').value = obfuscatedCode;
-      } catch (err) {
-        alert("❌ Terjadi error saat encrypt: " + err.message);
-        console.error(err);
-      }
-    });
+      window.open(url, "_blank");
+    }
   </script>
 </body>
 </html>

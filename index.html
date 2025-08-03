@@ -4,12 +4,12 @@
   <meta charset="UTF-8" />
   <title>Encrypt JS Keras</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <script src="https://cdn.jsdelivr.net/npm/javascript-obfuscator@4.0.2/browser.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/javascript-obfuscator@4.0.2/dist/index.browser.js"></script>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-950 text-white font-mono min-h-screen p-6">
   <div class="max-w-4xl mx-auto">
-    <h1 class="text-3xl font-bold mb-4 text-purple-400">JavaScript Encryptor Xatanical</h1>
+    <h1 class="text-3xl font-bold mb-4 text-purple-400">🛡️ JavaScript Encryptor (Hard)</h1>
 
     <div class="mb-4 flex gap-3 items-center">
       <input type="file" id="fileInput" accept=".js" class="bg-gray-800 text-sm p-2 rounded"/>
@@ -20,7 +20,7 @@
 
     <button id="encryptBtn" class="bg-purple-600 hover:bg-purple-700 px-6 py-2 rounded font-bold">🔐 Encrypt</button>
 
-    <h2 class="text-xl mt-6 mb-2 text-green-400">🔒 Encrypted Output:</h2>
+    <h2 class="text-xl mt-6 mb-2 text-green-400">Encrypted Xatanical:</h2>
     <textarea id="output" rows="10" readonly class="w-full p-3 rounded bg-gray-800 text-green-300 mb-4 font-mono"></textarea>
 
     <button onclick="copyOutput()" class="bg-gray-700 hover:bg-gray-600 px-4 py-2 rounded text-sm">📋 Copy</button>
@@ -47,20 +47,35 @@
       try {
         const obfuscatedCode = JavaScriptObfuscator.obfuscate(inputCode, {
           target: 'node',
+          calculator: true,
           compact: true,
+          hexadecimalNumbers: true,
           controlFlowFlattening: true,
           controlFlowFlatteningThreshold: 1,
-          numbersToExpressions: true,
-          simplify: true,
+          deadCodeInjection: true,
+          deadCodeInjectionThreshold: 0.8,
+          dispatcher: true,
+          duplicateLiteralsRemoval: true,
+          flatten: true,
+          globalConcealing: true,
+          identifierGenerator: 'zeroWidth',
+          minify: true,
+          movedDeclarations: true,
+          objectExtraction: true,
+          opaquePredicates: true,
+          renameVariables: true,
+          renameGlobals: true,
+          stringConcealing: true,
+          stringCompression: true,
+          stringArrayEncoding: ['zeroWidth'],
           stringArray: true,
           stringArrayShuffle: true,
           stringArrayThreshold: 1,
-          stringArrayEncoding: ['zeroWidth'],
           stringArrayIndexShift: true,
           splitStrings: true,
           splitStringsChunkLength: 8,
-          selfDefending: true,
-          unicodeEscapeSequence: true
+          unicodeEscapeSequence: true,
+          rgf: false
         }).getObfuscatedCode();
 
         document.getElementById('output').value = obfuscatedCode;

@@ -4,48 +4,56 @@
   <meta charset="UTF-8">
   <title>Pencarian Akun Sosial</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <style>
-    body { font-family: sans-serif; background: #111; color: #fff; padding: 2rem; text-align: center; }
-    input, button { padding: 0.5rem; margin: 0.5rem; font-size: 1rem; border-radius: 6px; }
-    button { cursor: pointer; background: #444; color: #fff; border: none; }
-    button:hover { background: #666; }
-  </style>
+  <link href="https://cdn.tailwindcss.com" rel="stylesheet">
 </head>
-<body>
-  <h1>Cari Akun Sosial</h1>
-  <p>Masukkan username tanpa @</p>
-  <input id="username" placeholder="Contoh: xatanicvxii">
-  <div style="margin-top: 1rem;">
-    <button onclick="search('telegram')">🔍 Telegram</button>
-    <button onclick="search('instagram')">📸 Instagram</button>
-    <button onclick="search('facebook')">📘 Facebook</button>
-    <button onclick="search('whatsapp')">📱 WhatsApp</button>
+<body class="bg-gray-900 text-white min-h-screen flex items-center justify-center px-4 py-8">
+  <div class="w-full max-w-xl text-center">
+    <h1 class="text-3xl font-bold text-purple-400 mb-4">🔍 Cari Akun Sosial Media</h1>
+    <p class="mb-6 text-gray-300">Masukkan username tanpa <code>@</code> atau tanpa <code>+</code> untuk WhatsApp.</p>
+
+    <input id="username" type="text" placeholder="contoh: xatanicvxii atau 6281234567890" class="w-full p-3 rounded bg-gray-800 text-white outline-none focus:ring-2 focus:ring-purple-500">
+
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-4">
+      <button onclick="search('telegram')" class="bg-blue-500 hover:bg-blue-600 py-2 rounded">Telegram</button>
+      <button onclick="search('instagram')" class="bg-pink-500 hover:bg-pink-600 py-2 rounded">Instagram</button>
+      <button onclick="search('facebook')" class="bg-blue-700 hover:bg-blue-800 py-2 rounded">Facebook</button>
+      <button onclick="search('whatsapp')" class="bg-green-600 hover:bg-green-700 py-2 rounded">WhatsApp</button>
+    </div>
+
+    <div id="result" class="mt-8 hidden bg-gray-800 rounded p-4">
+      <h2 class="text-lg font-semibold text-green-400 mb-2">🔗 Hasil Pencarian:</h2>
+      <p id="linkOutput" class="text-blue-300 break-all underline cursor-pointer"></p>
+    </div>
   </div>
 
   <script>
     function search(platform) {
       const username = document.getElementById("username").value.trim();
-      if (!username) return alert("Masukkan username dulu!");
+      if (!username) return alert("⚠️ Masukkan username atau nomor dulu!");
 
       let url = "";
 
       switch (platform) {
         case "telegram":
-          url = "https://t.me/" + username;
+          url = `https://t.me/${username}`;
           break;
         case "instagram":
-          url = "https://instagram.com/" + username;
+          url = `https://instagram.com/${username}`;
           break;
         case "facebook":
-          url = "https://facebook.com/" + username;
+          url = `https://facebook.com/${username}`;
           break;
         case "whatsapp":
-          if (!/^\d+$/.test(username)) return alert("Untuk WhatsApp, masukkan nomor HP tanpa +");
-          url = "https://wa.me/" + username;
+          if (!/^\d+$/.test(username)) {
+            alert("⚠️ WhatsApp hanya menerima nomor HP (angka) tanpa +");
+            return;
+          }
+          url = `https://wa.me/${username}`;
           break;
       }
 
-      window.open(url, "_blank");
+      document.getElementById("linkOutput").innerHTML = `<a href="${url}" target="_blank">${url}</a>`;
+      document.getElementById("result").classList.remove("hidden");
     }
   </script>
 </body>

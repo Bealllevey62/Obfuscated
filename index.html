@@ -1,129 +1,133 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8">
   <title>Obfuscated Xatanical</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="https://cdn.jsdelivr.net/npm/javascript-obfuscator@2.18.3/dist/javascript-obfuscator.browser.js"></script>
-  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      background: #0e0e0e;
+      color: #ccc;
+      font-family: monospace;
+      text-align: center;
+      padding: 20px;
+    }
+
+    h1 {
+      color: #a067d1;
+    }
+
+    textarea {
+      width: 90%;
+      height: 200px;
+      background: #111;
+      color: #0f0;
+      border: 1px solid #444;
+      padding: 10px;
+      font-family: monospace;
+      font-size: 14px;
+      margin-top: 10px;
+    }
+
+    input[type="file"] {
+      display: none;
+    }
+
+    label[for="fileInput"] {
+      background: #333;
+      color: #fff;
+      padding: 8px 16px;
+      border-radius: 4px;
+      cursor: pointer;
+      margin-top: 10px;
+      display: inline-block;
+    }
+
+    button {
+      margin-top: 15px;
+      background: #a067d1;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    #output {
+      height: 200px;
+      margin-top: 10px;
+    }
+
+    .tagline {
+      font-size: 18px;
+      margin-bottom: 20px;
+      color: #aaa;
+    }
+  </style>
 </head>
-<body class="bg-black text-white font-mono min-h-screen p-6">
+<body>
+  <h1>JavaScript Encryptor (Hard)</h1>
+  <div class="tagline">Welcome to Obfuscated Xatanical</div>
 
-  <!-- Welcome Screen -->
-  <div id="welcome" class="text-center">
-    <h1 class="text-4xl font-bold text-purple-400 mb-6">Welcome to Obfuscated Xatanical</h1>
-    <button id="btnStart" class="bg-purple-600 hover:bg-purple-700 px-6 py-3 rounded font-bold text-lg">Click Obfuscated</button>
-  </div>
+  <label for="fileInput">📁 Load File</label>
+  <input type="file" id="fileInput" accept=".js">
 
-  <!-- Login Screen -->
-  <div id="login" class="hidden text-center">
-    <h2 class="text-xl mb-4">Masukkan Username Telegram</h2>
-    <input id="username" type="text" placeholder="@username" class="px-4 py-2 rounded text-black"/>
-    <button id="btnLogin" class="bg-green-600 hover:bg-green-700 px-4 py-2 rounded ml-2">Kirim</button>
-  </div>
+  <br><br>
+  <textarea id="input" placeholder="Masukkan kode JS atau upload file .js..."></textarea>
+  <br>
+  <button id="encryptBtn">Encrypt</button>
+  <br><br>
+  <div>🧪 Encrypted Output:</div>
+  <textarea id="output" readonly></textarea>
 
-  <!-- Main App -->
-  <div id="app" class="hidden max-w-4xl mx-auto mt-8">
-    <h1 class="text-3xl font-bold mb-4 text-purple-400">🛡️ JavaScript Encryptor (Hard)</h1>
-
-    <div class="mb-4 flex gap-3 items-center">
-      <input type="file" id="fileInput" accept=".js" class="bg-gray-800 text-sm p-2 rounded"/>
-      <button id="btnLoad" class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded text-sm">📂 Load File</button>
-    </div>
-
-    <textarea id="input" rows="10" placeholder="// Masukkan atau load kode JS..." class="w-full p-3 rounded bg-gray-800 text-white mb-4 outline-none focus:ring-2 focus:ring-purple-500"></textarea>
-
-    <button id="encryptBtn" class="bg-purple-600 hover:bg-purple-700 px-6 py-2 rounded font-bold">🔐 Encrypt</button>
-
-    <h2 class="text-xl mt-6 mb-2 text-green-400">🔒 Encrypted Output:</h2>
-    <textarea id="output" rows="10" readonly class="w-full p-3 rounded bg-gray-800 text-green-300 mb-4 font-mono"></textarea>
-
-    <button id="btnCopy" class="bg-gray-700 hover:bg-gray-600 px-4 py-2 rounded text-sm">📋 Copy</button>
-    <button id="btnDownload" class="bg-green-700 hover:bg-green-800 px-4 py-2 rounded text-sm ml-2">⬇️ Download .js</button>
-  </div>
-
-  <!-- Script Section -->
   <script>
-    window.addEventListener('DOMContentLoaded', () => {
-      const btnStart = document.getElementById("btnStart");
-      const btnLogin = document.getElementById("btnLogin");
-      const btnLoad = document.getElementById("btnLoad");
-      const encryptBtn = document.getElementById("encryptBtn");
-      const btnCopy = document.getElementById("btnCopy");
-      const btnDownload = document.getElementById("btnDownload");
+    document.getElementById('fileInput').addEventListener('change', function (e) {
+      const file = e.target.files[0];
+      if (!file) return;
 
-      btnStart.addEventListener("click", () => {
-        document.getElementById("welcome").classList.add("hidden");
-        document.getElementById("login").classList.remove("hidden");
-      });
+      const reader = new FileReader();
+      reader.onload = function (event) {
+        document.getElementById('input').value = event.target.result;
+      };
+      reader.readAsText(file);
+    });
 
-      btnLogin.addEventListener("click", () => {
-        const username = document.getElementById("username").value.trim();
-        if (!username.startsWith("@")) return alert("Masukkan username yang valid diawali @");
+    document.getElementById('encryptBtn').addEventListener("click", () => {
+      const inputCode = document.getElementById('input').value;
+      if (!inputCode.trim()) return alert("Masukkan kode terlebih dahulu!");
 
-        document.getElementById("login").classList.add("hidden");
-        document.getElementById("app").classList.remove("hidden");
-      });
+      const obfuscator = window['JavaScriptObfuscator'] || window['javascript-obfuscator'];
+      if (!obfuscator || !obfuscator.obfuscate) {
+        return alert("❌ Obfuscator gagal dimuat. Coba refresh halaman atau periksa jaringan.");
+      }
 
-      btnLoad.addEventListener("click", () => {
-        const fileInput = document.getElementById("fileInput");
-        const file = fileInput.files[0];
-        if (!file || !file.name.endsWith(".js")) return alert("Pilih file .js");
+      try {
+        const obfuscatedCode = obfuscator.obfuscate(inputCode, {
+          target: 'node',
+          compact: true,
+          controlFlowFlattening: true,
+          controlFlowFlatteningThreshold: 1,
+          numbersToExpressions: true,
+          simplify: true,
+          stringArray: true,
+          stringArrayShuffle: true,
+          stringArrayThreshold: 1,
+          stringArrayEncoding: ['base64'],
+          stringArrayIndexShift: true,
+          splitStrings: true,
+          splitStringsChunkLength: 8,
+          selfDefending: true,
+          unicodeEscapeSequence: true
+        }).getObfuscatedCode();
 
-        const reader = new FileReader();
-        reader.onload = function (e) {
-          document.getElementById("input").value = e.target.result;
-        };
-        reader.readAsText(file);
-      });
-
-      encryptBtn.addEventListener("click", () => {
-        const inputCode = document.getElementById('input').value;
-        if (!inputCode.trim()) return alert("Masukkan kode terlebih dahulu!");
-
-        try {
-          const obfuscatedCode = window['javascript-obfuscator'].obfuscate(inputCode, {
-            target: 'node',
-            compact: true,
-            controlFlowFlattening: true,
-            controlFlowFlatteningThreshold: 1,
-            numbersToExpressions: true,
-            simplify: true,
-            stringArray: true,
-            stringArrayShuffle: true,
-            stringArrayThreshold: 1,
-            stringArrayEncoding: ['base64'],
-            stringArrayIndexShift: true,
-            splitStrings: true,
-            splitStringsChunkLength: 8,
-            selfDefending: true,
-            unicodeEscapeSequence: true
-          }).getObfuscatedCode();
-
-          document.getElementById('output').value = obfuscatedCode;
-        } catch (err) {
-          alert("❌ Terjadi error saat encrypt: " + err.message);
-          console.error(err);
-        }
-      });
-
-      btnCopy.addEventListener("click", () => {
-        const output = document.getElementById("output");
-        output.select();
-        document.execCommand("copy");
-        alert("✅ Output berhasil dicopy!");
-      });
-
-      btnDownload.addEventListener("click", () => {
-        const blob = new Blob([document.getElementById("output").value], { type: "application/javascript" });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = "encrypted.js";
-        a.click();
-      });
+        document.getElementById('output').value = obfuscatedCode;
+      } catch (err) {
+        alert("❌ Terjadi error saat encrypt: " + err.message);
+        console.error(err);
+      }
     });
   </script>
-
 </body>
 </html>
